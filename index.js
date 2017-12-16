@@ -56,7 +56,7 @@ csvStream
         let keyValueData = keyValueTransformer(simpleJsonData)
         fs.writeFile("data/hk-stations-key_value.json", JSON.stringify(keyValueData), (err) => {
             if (err) console.error("Failed to write into data/hk-stations-key_value.json")
-            console.log(keyValueData)
+            // console.log(keyValueData)
             console.log("Generated data/hk-stations-key_value.json")
         })
     })

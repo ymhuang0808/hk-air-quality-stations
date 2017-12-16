@@ -11,6 +11,16 @@ let simpleJsonData = []
 let geoJsonTransformer = (data) => {
     return GeoJSON.parse(data, { Point: ["coordinates.latitude", "coordinates.longitude"] })
 }
+let keyValueTransformer = (data) => {
+    let stations = {}
+    data.forEach((location) => {
+        stations[location.eng_name] = {
+            coordinates: location.coordinates
+        }
+    })
+
+    return stations
+}
 let csvStream = csv.fromStream(input, {delimiter: "\t", headers: true})
 
 csvStream
@@ -41,5 +51,12 @@ csvStream
         fs.writeFile("data/hk-stations.geojson", JSON.stringify(geojsonData), (err) => {
             if (err) console.error("Failed to write into data/hk-stations.geojson")
             console.log("Generated data/hk-stations.geojson")
+        })
+
+        let keyValueData = keyValueTransformer(simpleJsonData)
+        fs.writeFile("data/hk-stations-key_value.json", JSON.stringify(keyValueData), (err) => {
+            if (err) console.error("Failed to write into data/hk-stations-key_value.json")
+            console.log(keyValueData)
+            console.log("Generated data/hk-stations-key_value.json")
         })
     })

@@ -15,11 +15,24 @@ let keyValueTransformer = (data) => {
     let stations = {}
     data.forEach((location) => {
         stations[location.eng_name] = {
+            city: location.city,
             coordinates: location.coordinates
         }
     })
 
     return stations
+}
+let getCity = (address) => {
+    let addressList = address.split(', ')
+    let city
+
+    if (address.match(/\, Hong Kong$/)) {
+        city = addressList[addressList.length - 2]
+    } else {
+        city = addressList[addressList.length -1]
+    }
+
+    return city
 }
 let csvStream = csv.fromStream(input, {delimiter: "\t", headers: true})
 
@@ -32,6 +45,7 @@ csvStream
         return {
             ch_name: data["中文名稱"].split("空氣質素監測站")[0],
             eng_name: data["ENGLISH NAME"].split(" Air Quality Monitoring Station")[0],
+            city: getCity(data["ENGLISH ADDRESS"]),
             coordinates: {
                 longitude: coordinates[1],
                 latitude: coordinates[0]
